@@ -1,19 +1,13 @@
 export default async function handler(request, response) {
   
-  // ======== НАСТРОЙКА CORS ========
-  // Разрешаем запросы с вашего GitHub Pages
+  // Настройка CORS
   response.setHeader('Access-Control-Allow-Origin', '*');
-  // Если нужны только конкретные домены, замените '*' на:
-  // 'https://albekanapin.github.io'
-  
   response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Предзапрос OPTIONS — браузер спрашивает разрешение
   if (request.method === 'OPTIONS') {
     return response.status(200).end();
   }
-  // ======== КОНЕЦ НАСТРОЙКИ CORS ========
 
   if (request.method !== 'POST') {
     return response.status(405).json({ error: 'Метод не поддерживается' });
@@ -76,6 +70,7 @@ export default async function handler(request, response) {
     return response.status(200).json(JSON.parse(content));
 
   } catch (error) {
-    return response.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    // CORS-заголовки уже установлены выше, но на всякий случай оставляем
+    return response.status(500).json({ error: 'Внутренняя ошибка сервера: ' + error.message });
   }
 }
