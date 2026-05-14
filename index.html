@@ -265,12 +265,13 @@
                 </div>
                 <div class="reason">💡 ${escapeHtml(film.reason || '')}</div>
                 ${description}
-                <div class="platform-buttons">
-                    <a href="https://hd.kinopoisk.ru/search/${encodeURIComponent(film.title)}" target="_blank" rel="nofollow" class="btn btn-kp">▶ Кинопоиск</a>
-                    <a href="https://www.ivi.ru/search/?q=${encodeURIComponent(film.title)}" target="_blank" rel="nofollow" class="btn btn-ivi">▶ IVI</a>
-                    <a href="https://okko.tv/search/${encodeURIComponent(film.title)}" target="_blank" rel="nofollow" class="btn btn-okko">▶ Okko</a>
-                    <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(film.title + ' трейлер')}" target="_blank" rel="nofollow" class="btn btn-trailer">🎬 Трейлер</a>
-                </div>
+                       <div class="platform-buttons">
+            <a href="https://www.kinopoisk.ru/index.php?kp_query=${encodeURIComponent(film.title)}" target="_blank" rel="nofollow" class="btn btn-kp">▶ Кинопоиск</a>
+            <a href="https://www.ivi.ru/search/?q=${encodeURIComponent(film.title)}" target="_blank" rel="nofollow" class="btn btn-ivi">▶ IVI</a>
+            <a href="https://okko.tv/search/${encodeURIComponent(film.title)}" target="_blank" rel="nofollow" class="btn btn-okko">▶ Okko</a>
+            <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(film.title + ' трейлер')}" target="_blank" rel="nofollow" class="btn btn-trailer">🎬 Трейлер</a>
+        </div>
+
             `;
             return card;
         }
