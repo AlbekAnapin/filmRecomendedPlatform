@@ -32,34 +32,35 @@ export default async function handler(request, response) {
 - "reason": 1-2 предложения на русском языке, почему это понравится, с отсылкой к "${query}"
 - "year": год выпуска (число, если применимо)`;
 
-    // Запрос к Gemini 2.0 Flash (бесплатно до 1500 запросов/день)
-    const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ text: prompt }]
-          }],
-          generationConfig: {
-            temperature: 0.8,
-            maxOutputTokens: 600,
-            responseMimeType: "application/json",  // JSON mode
-          }
-        }),
-      }
-    );
+    // Запрос к Groq (Llama 3.3 70B)
+    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          {
+            role: 'system',
+            content: 'Ты — рекомендательный сервис. Отвечай строго в JSON на русском языке. Без markdown, без ```json```.',
+          },
+          { role: 'user', content: prompt },
+        ],
+        temperature: 0.8,
+        max_tokens: 600,
+        response_format: { type: 'json_object' }, // JSON mode у Groq
+      }),
+    });
 
-    const data = await geminiResponse.json();
+    const data = await groqResponse.json();
 
     if (data.error) {
       return response.status(500).json({ error: 'Ошибка API: ' + data.error.message });
     }
 
-    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const content = data.choices?.[0]?.message?.content;
     if (!content) {
       return response.status(500).json({ error: 'Не удалось получить рекомендации' });
     }
