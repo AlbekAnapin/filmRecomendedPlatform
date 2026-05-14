@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Что посмотреть и почитать? — Гайд рекомендаций</title>
-    <meta name="description" content="Введите любимый фильм или книгу, и нейросеть подберёт 3 идеальные рекомендации. Фильмы, сериалы, книги — что посмотреть и почитать.">
+    <meta name="description" content="Введите любимый фильм или книгу, и нейросеть подберёт идеальные рекомендации. Фильмы, сериалы, книги — смотрите на Кинопоиске, IVI, читайте на Литрес.">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0b0b14;
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
@@ -18,391 +14,248 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
             padding: 20px;
         }
-        .container {
-            max-width: 780px;
-            width: 100%;
-        }
-        /* Заголовок */
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
+        .container { max-width: 780px; width: 100%; }
+        .header { text-align: center; margin-bottom: 28px; }
         .header h1 {
-            font-size: 2.4rem;
-            font-weight: 800;
+            font-size: 2.4rem; font-weight: 800;
             background: linear-gradient(135deg, #c084fc, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 8px; letter-spacing: -0.5px;
         }
-        .header p {
-            color: #9ca3af;
-            font-size: 1.05rem;
-        }
-        /* Поле ввода */
+        .header p { color: #9ca3af; font-size: 1.05rem; }
+
         .search-box {
-            background: #1a1a2e;
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 28px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            background: #1a1a2e; border-radius: 20px; padding: 24px;
+            margin-bottom: 28px; box-shadow: 0 12px 30px rgba(0,0,0,0.5);
         }
         .search-box label {
-            display: block;
-            font-size: 0.9rem;
-            color: #c084fc;
-            margin-bottom: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: block; font-size: 0.9rem; color: #c084fc;
+            margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .search-box input {
-            width: 100%;
-            padding: 14px 18px;
-            background: #0f0f1f;
-            border: 1px solid #2d2d4a;
-            border-radius: 14px;
-            color: #fff;
-            font-size: 1.1rem;
-            outline: none;
-            transition: border 0.2s;
+        .search-box input[type="text"] {
+            width: 100%; padding: 12px 18px; background: #0f0f1f;
+            border: 1px solid #2d2d4a; border-radius: 14px; color: #fff;
+            font-size: 1rem; outline: none; transition: border 0.2s;
         }
-        .search-box input:focus {
-            border-color: #c084fc;
+        .search-box input:focus { border-color: #c084fc; }
+        .pref-row {
+            display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap;
         }
-        .search-box input::placeholder {
-            color: #4b5563;
+        .pref-row input[type="text"] { flex: 1; min-width: 200px; }
+        .checkbox-group {
+            display: flex; gap: 16px; align-items: center;
         }
+        .checkbox-group label { color: #cbd5e1; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
         .search-btn {
-            width: 100%;
-            margin-top: 14px;
-            padding: 14px;
+            width: 100%; margin-top: 16px; padding: 14px;
             background: linear-gradient(135deg, #9333ea, #4f46e5);
-            border: none;
-            border-radius: 14px;
-            color: #fff;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
+            border: none; border-radius: 14px; color: #fff;
+            font-size: 1.05rem; font-weight: 600; cursor: pointer;
             transition: opacity 0.2s, transform 0.1s;
-            letter-spacing: 0.3px;
         }
-        .search-btn:hover {
-            opacity: 0.92;
-        }
-        .search-btn:active {
-            transform: scale(0.97);
-        }
-        .search-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        /* Категории */
-        .categories {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 28px;
-            justify-content: center;
-        }
-        .category-chip {
-            background: #1e1e32;
-            border: 1px solid #2d2d4a;
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #cbd5e1;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .category-chip:hover {
-            background: #2d2d4a;
-            border-color: #9333ea;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-        .category-chip.active {
-            background: #9333ea;
-            border-color: #9333ea;
-            color: #fff;
-        }
-        /* Результаты */
-        .results {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
+        .search-btn:hover { opacity: 0.92; }
+        .search-btn:active { transform: scale(0.97); }
+        .search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .results-section { margin-bottom: 32px; }
+        .section-title {
+            font-size: 1.5rem; font-weight: 700; margin-bottom: 16px;
+            color: #c084fc; border-bottom: 1px solid #2d2d4a; padding-bottom: 8px;
         }
         .card {
-            background: #1a1a2e;
-            border-radius: 20px;
-            padding: 22px 26px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid #2d2d4a;
-            animation: fadeInUp 0.35s ease-out;
+            background: #1a1a2e; border-radius: 18px; padding: 18px 22px;
+            margin-bottom: 14px; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border: 1px solid #2d2d4a; transition: transform 0.2s, box-shadow 0.2s;
+            animation: fadeInUp 0.3s ease-out;
         }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 35px rgba(147, 51, 234, 0.2);
-            border-color: #9333ea;
-        }
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 10px;
-        }
-        .card-emoji {
-            font-size: 2rem;
-            background: rgba(255,255,255,0.08);
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 14px;
-        }
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.2px;
-        }
-        .card-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(147, 51, 234, 0.2); border-color: #9333ea; }
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .card-emoji { font-size: 1.8rem; background: rgba(255,255,255,0.08); width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+        .card-title { font-size: 1.2rem; font-weight: 700; }
+        .card-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
         .tag {
-            background: rgba(147, 51, 234, 0.15);
-            color: #c084fc;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            background: rgba(147, 51, 234, 0.15); color: #c084fc;
+            padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
         }
-        .tag.year {
-            background: rgba(129, 140, 248, 0.15);
-            color: #a5b4fc;
-        }
-        .tag.rating {
-            background: rgba(52, 211, 153, 0.15);
-            color: #34d399;
-        }
-        .card .reason {
-            font-size: 0.95rem;
-            color: #9ca3af;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-        .card-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .tag.year { background: rgba(129, 140, 248, 0.15); color: #a5b4fc; }
+        .tag.rating { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+        .reason { font-size: 0.95rem; color: #9ca3af; line-height: 1.5; margin-bottom: 14px; }
+        .platform-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
         .btn {
-            padding: 10px 18px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
+            padding: 8px 14px; border-radius: 10px; font-size: 0.85rem; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+            transition: background 0.2s; border: 1px solid transparent;
         }
-        .btn-watch {
-            background: #9333ea;
-            color: #fff;
-            border: none;
-        }
-        .btn-watch:hover {
-            background: #7e22ce;
-        }
+        .btn-kp { background: #e65100; color: #fff; }
+        .btn-kp:hover { background: #bf360c; }
+        .btn-ivi { background: #d32f2f; color: #fff; }
+        .btn-ivi:hover { background: #b71c1c; }
+        .btn-okko { background: #7b1fa2; color: #fff; }
+        .btn-okko:hover { background: #6a1b9a; }
+        .btn-litres { background: #fbc02d; color: #1a1a2e; }
+        .btn-litres:hover { background: #f9a825; }
+        .btn-bookmate { background: #00bcd4; color: #fff; }
+        .btn-bookmate:hover { background: #0097a7; }
         .btn-trailer {
-            background: transparent;
-            color: #cbd5e1;
-            border: 1px solid #3d3d5c;
+            background: transparent; color: #cbd5e1; border: 1px solid #3d3d5c;
         }
-        .btn-trailer:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: #9333ea;
-        }
-        .btn-share {
-            background: transparent;
-            border: 1px solid #3d3d5c;
-            color: #cbd5e1;
-            padding: 10px;
-        }
-        .btn-share:hover {
-            background: rgba(255,255,255,0.05);
-        }
-        .error-message {
-            text-align: center;
-            padding: 30px;
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-            border-radius: 16px;
-        }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #c084fc;
-            font-size: 1.1rem;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #4b5563;
-            font-size: 0.85rem;
-        }
-        @media (max-width: 500px) {
-            .header h1 { font-size: 1.8rem; }
-            .card-buttons { flex-direction: column; }
-            .btn { text-align: center; justify-content: center; }
-        }
+        .btn-trailer:hover { background: rgba(255,255,255,0.05); border-color: #9333ea; }
+        .loading { text-align: center; padding: 40px; color: #c084fc; font-size: 1.1rem; }
+        .error-message { text-align: center; padding: 30px; color: #ef4444; background: rgba(239,68,68,0.1); border-radius: 16px; }
+        .footer { text-align: center; margin-top: 40px; color: #4b5563; font-size: 0.85rem; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🎬 Что посмотреть и почитать?</h1>
-            <p>Введите любимый фильм или книгу — получите три точные рекомендации</p>
+            <p>Введите любимый фильм или книгу — получите персональные рекомендации</p>
         </div>
 
         <div class="search-box">
-            <label for="searchInput">Что вам понравилось из последнего?</label>
-            <input type="text" id="searchInput" placeholder="Например: Довод, Три товарища, Аркейн..." autocomplete="off" onkeydown="if(event.key==='Enter') search()">
-            <button class="search-btn" id="searchBtn" onclick="search()">🔍 Найти похожее</button>
+            <label for="searchInput">🔍 Что вам понравилось?</label>
+            <input type="text" id="searchInput" placeholder="Например: Довод, Аркейн, Три товарища..." autocomplete="off" onkeydown="if(event.key==='Enter') search()">
+            <div class="pref-row">
+                <input type="text" id="preferencesInput" placeholder="Ваши пожелания (жанр, год, настроение)">
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="filmsCheck" checked> 🎥 Фильмы</label>
+                    <label><input type="checkbox" id="booksCheck" checked> 📚 Книги</label>
+                </div>
+            </div>
+            <button class="search-btn" id="searchBtn" onclick="search()">🔍 Найти рекомендации</button>
         </div>
 
-        <!-- Категории подборок -->
-        <div class="categories" id="categories">
-            <button class="category-chip" data-prompt="лучшие фильмы 2025-2026 года">🏆 Топ-10 новинок</button>
-            <button class="category-chip" data-prompt="комедии для вечера">😂 Комедии</button>
-            <button class="category-chip" data-prompt="фильмы с неожиданным финалом">🤯 Сюжетные повороты</button>
-            <button class="category-chip" data-prompt="семейные фильмы для просмотра с детьми">👨‍👩‍👧‍👦 Для семьи</button>
-            <button class="category-chip" data-prompt="романтические фильмы на вечер">❤️ Романтика</button>
-            <button class="category-chip" data-prompt="научная фантастика и фэнтези">🚀 Фантастика</button>
-            <button class="category-chip" data-prompt="интересные книги, которые стоит прочитать">📚 Книги</button>
-        </div>
-
-        <div class="results" id="results"></div>
+        <div id="resultsContainer"></div>
 
         <div class="footer">
-            Рекомендации подбираются нейросетью Groq (Llama 3.3). Партнёрские ссылки могут приносить комиссию.
+            Рекомендации подбираются нейросетью Groq. Партнёрские ссылки могут приносить комиссию.
         </div>
     </div>
 
     <script>
         const API_URL = 'https://film-recomended-platform-albekanapins-projects.vercel.app/api/recommend';
 
-        async function search(queryOverride) {
-            const inputField = document.getElementById('searchInput');
-            const query = queryOverride || inputField.value.trim();
-            const resultsDiv = document.getElementById('results');
-            const searchBtn = document.getElementById('searchBtn');
+        async function search() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) { alert('Введите название фильма или книги 😊'); return; }
 
-            if (!query) {
-                alert('Введите название или выберите категорию 😊');
-                return;
-            }
+            const preferences = document.getElementById('preferencesInput').value.trim();
+            const searchFilms = document.getElementById('filmsCheck').checked;
+            const searchBooks = document.getElementById('booksCheck').checked;
+            const btn = document.getElementById('searchBtn');
+            btn.disabled = true; btn.textContent = '⏳ Ищу...';
 
-            searchBtn.disabled = true;
-            searchBtn.textContent = '⏳ Ищу...';
-
-            resultsDiv.innerHTML = '<div class="loading">🔍 Ищем похожее на «' + escapeHtml(query) + '»...</div>';
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '<div class="loading">🔍 Ищем для вас персональные рекомендации...</div>';
 
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query })
+                    body: JSON.stringify({ query, preferences, searchFilms, searchBooks })
                 });
-
                 if (!response.ok) {
-                    const errData = await response.json();
-                    throw new Error(errData.error || 'Ошибка сервера');
+                    const err = await response.json();
+                    throw new Error(err.error || 'Ошибка сервера');
                 }
-
                 const data = await response.json();
-                resultsDiv.innerHTML = '';
+                container.innerHTML = '';
 
-                if (data.direct_match) addCard(resultsDiv, '🎯 Прямое попадание', data.direct_match);
-                if (data.surprise) addCard(resultsDiv, '🔄 Неожиданный поворот', data.surprise);
-                if (data.deep_dive) addCard(resultsDiv, '🌊 Глубокое погружение', data.deep_dive);
-
-                if (!data.direct_match && !data.surprise && !data.deep_dive) {
-                    resultsDiv.innerHTML = '<div class="error-message">Не удалось подобрать рекомендации. Попробуйте другой запрос.</div>';
+                // Фильмы
+                if (data.films && data.films.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'results-section';
+                    section.innerHTML = '<div class="section-title">🎬 Фильмы и сериалы</div>';
+                    const cardsContainer = document.createElement('div');
+                    data.films.forEach(film => cardsContainer.appendChild(createFilmCard(film)));
+                    section.appendChild(cardsContainer);
+                    container.appendChild(section);
                 }
+
+                // Книги
+                if (data.books && data.books.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'results-section';
+                    section.innerHTML = '<div class="section-title">📚 Книги</div>';
+                    const cardsContainer = document.createElement('div');
+                    data.books.forEach(book => cardsContainer.appendChild(createBookCard(book)));
+                    section.appendChild(cardsContainer);
+                    container.appendChild(section);
+                }
+
+                if ((!data.films || data.films.length === 0) && (!data.books || data.books.length === 0)) {
+                    container.innerHTML = '<div class="error-message">Ничего не найдено. Попробуйте изменить запрос.</div>';
+                }
+
             } catch (error) {
-                resultsDiv.innerHTML = `<div class="error-message">😔 ${escapeHtml(error.message)}</div>`;
+                container.innerHTML = `<div class="error-message">😔 ${escapeHtml(error.message)}</div>`;
                 console.error(error);
             } finally {
-                searchBtn.disabled = false;
-                searchBtn.textContent = '🔍 Найти похожее';
+                btn.disabled = false; btn.textContent = '🔍 Найти рекомендации';
             }
         }
 
-        function addCard(container, badgeText, item) {
+        function createFilmCard(film) {
             const card = document.createElement('div');
             card.className = 'card';
-
-            const typeEmoji = item.type === 'book' ? '📖' : '🎬';
-            const typeLabel = item.type === 'book' ? 'Книга' : item.type === 'series' ? 'Сериал' : 'Фильм';
-            const yearTag = item.year ? `<span class="tag year">📅 ${item.year}</span>` : '';
-            const ratingTag = item.rating ? `<span class="tag rating">⭐ ${item.rating}</span>` : '';
-            const genreTags = item.genres ? item.genres.map(g => `<span class="tag">${g}</span>`).join('') : '';
+            const typeEmoji = film.type === 'series' ? '📺' : '🎬';
+            const typeText = film.type === 'series' ? 'Сериал' : 'Фильм';
+            const genres = film.genres?.map(g => `<span class="tag">${g}</span>`).join('') || '';
+            const year = film.year ? `<span class="tag year">📅 ${film.year}</span>` : '';
+            const rating = film.rating ? `<span class="tag rating">⭐ ${film.rating}</span>` : '';
 
             card.innerHTML = `
                 <div class="card-header">
                     <div class="card-emoji">${typeEmoji}</div>
                     <div>
-                        <div class="card-title">${escapeHtml(item.title)}</div>
+                        <div class="card-title">${escapeHtml(film.title)}</div>
                         <div class="card-meta">
-                            <span class="tag">${typeLabel}</span>
-                            ${yearTag}
-                            ${ratingTag}
-                            ${genreTags}
+                            <span class="tag">${typeText}</span> ${year} ${rating} ${genres}
                         </div>
                     </div>
                 </div>
-                <div class="reason">${escapeHtml(item.reason || '')}</div>
-                <div class="card-buttons">
-                    <a href="${item.type === 'book' ? 'https://www.litres.ru/search/?q=' + encodeURIComponent(item.title) : 'https://hd.kinopoisk.ru/search/' + encodeURIComponent(item.title)}" target="_blank" rel="nofollow sponsored" class="btn btn-watch">
-                        ${item.type === 'book' ? '📖 Читать' : '▶ Смотреть'}
-                    </a>
-                    <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(item.title + ' трейлер')}" target="_blank" rel="nofollow" class="btn btn-trailer">🎬 Трейлер</a>
-                    <button class="btn btn-share" onclick="share('${escapeHtml(item.title)}')" title="Поделиться">🔗</button>
+                <div class="reason">${escapeHtml(film.reason || '')}</div>
+                <div class="platform-buttons">
+                    <a href="https://hd.kinopoisk.ru/search/${encodeURIComponent(film.title)}" target="_blank" rel="nofollow" class="btn btn-kp">▶ Кинопоиск</a>
+                    <a href="https://www.ivi.ru/search/?q=${encodeURIComponent(film.title)}" target="_blank" rel="nofollow" class="btn btn-ivi">▶ IVI</a>
+                    <a href="https://okko.tv/search/${encodeURIComponent(film.title)}" target="_blank" rel="nofollow" class="btn btn-okko">▶ Okko</a>
+                    <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(film.title + ' трейлер')}" target="_blank" rel="nofollow" class="btn btn-trailer">🎬 Трейлер</a>
                 </div>
             `;
-            container.appendChild(card);
+            return card;
         }
 
-        function share(title) {
-            const url = window.location.href;
-            const text = `🎬 Советую посмотреть: ${title}. Нашёл через сервис «Что посмотреть?» ${url}`;
-            if (navigator.share) {
-                navigator.share({ title: 'Рекомендация', text, url });
-            } else {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('Ссылка скопирована! Делитесь с друзьями.');
-                });
-            }
+        function createBookCard(book) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const genres = book.genres?.map(g => `<span class="tag">${g}</span>`).join('') || '';
+            const year = book.year ? `<span class="tag year">📅 ${book.year}</span>` : '';
+            const rating = book.rating ? `<span class="tag rating">⭐ ${book.rating}</span>` : '';
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-emoji">📖</div>
+                    <div>
+                        <div class="card-title">${escapeHtml(book.title)}</div>
+                        <div class="card-meta">
+                            <span class="tag">Книга</span> ${year} ${rating} ${genres}
+                        </div>
+                    </div>
+                </div>
+                <div class="reason">${escapeHtml(book.reason || '')}</div>
+                <div class="platform-buttons">
+                    <a href="https://www.litres.ru/search/?q=${encodeURIComponent(book.title)}" target="_blank" rel="nofollow" class="btn btn-litres">📖 Литрес</a>
+                    <a href="https://bookmate.ru/search?query=${encodeURIComponent(book.title)}" target="_blank" rel="nofollow" class="btn btn-bookmate">📘 Букмейт</a>
+                    <a href="https://www.labirint.ru/search/${encodeURIComponent(book.title)}" target="_blank" rel="nofollow" class="btn btn-trailer">🔗 Лабиринт</a>
+                </div>
+            `;
+            return card;
         }
 
         function escapeHtml(str) {
@@ -411,18 +264,6 @@
             div.textContent = str;
             return div.innerHTML;
         }
-
-        // Обработчики категорий
-        document.querySelectorAll('.category-chip').forEach(chip => {
-            chip.addEventListener('click', function() {
-                const prompt = this.dataset.prompt;
-                document.getElementById('searchInput').value = '';
-                search(prompt);
-                // Подсветка активной категории
-                document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
     </script>
 </body>
 </html>
