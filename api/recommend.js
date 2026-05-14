@@ -1,10 +1,10 @@
 export default async function handler(request, response) {
-  // === CORS заголовки для всех ответов ===
+  // Универсальная установка CORS для всех ответов
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Обработка предзапроса браузера
+  // Обработка предзапроса браузера (OPTIONS)
   if (request.method === 'OPTIONS') {
     return response.status(200).end();
   }
@@ -94,6 +94,7 @@ export default async function handler(request, response) {
     return response.status(200).json(JSON.parse(content));
 
   } catch (error) {
+    // Даже при внутренней ошибке CORS-заголовки уже установлены
     return response.status(500).json({ error: 'Внутренняя ошибка сервера: ' + error.message });
   }
 }
