@@ -1,14 +1,21 @@
 export default async function handler(request, response) {
+  // === CORS заголовки для всех ответов ===
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (request.method === 'OPTIONS') return response.status(200).end();
-  if (request.method !== 'POST') return response.status(405).json({ error: 'Метод не поддерживается' });
+
+  // Обработка предзапроса браузера
+  if (request.method === 'OPTIONS') {
+    return response.status(200).end();
+  }
+
+  if (request.method !== 'POST') {
+    return response.status(405).json({ error: 'Метод не поддерживается' });
+  }
 
   try {
     const { query, preferences, searchFilms, searchBooks, genres } = request.body;
 
-    // Разрешён пустой query, если есть хотя бы что-то для поиска
     if (!query && !preferences && (!genres || genres.length === 0)) {
       return response.status(400).json({ error: 'Укажите хотя бы название, пожелания или выберите жанр' });
     }
@@ -76,9 +83,13 @@ export default async function handler(request, response) {
     });
 
     const data = await groqResponse.json();
-    if (data.error) return response.status(500).json({ error: 'Ошибка API: ' + data.error.message });
+    if (data.error) {
+      return response.status(500).json({ error: 'Ошибка API: ' + data.error.message });
+    }
     const content = data.choices?.[0]?.message?.content;
-    if (!content) return response.status(500).json({ error: 'Не удалось получить рекомендации' });
+    if (!content) {
+      return response.status(500).json({ error: 'Не удалось получить рекомендации' });
+    }
 
     return response.status(200).json(JSON.parse(content));
 
